@@ -37,10 +37,9 @@ cross_steps: &cross_steps
     - run: rustup default ${RUST_VERSION:-stable}
     - run: rustup component add rustfmt
     - run: cargo update
-    - run: cargo install cross
     - run: |
         cd $EXAMPLE_PATH
-        cross build --release --target $TARGET
+        cargo build --target $TARGET --release
     - save_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
         paths:
