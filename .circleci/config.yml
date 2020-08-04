@@ -39,8 +39,8 @@ cross_steps: &cross_steps
     - run: cargo update
     - run: cargo install cross
     - run: |
-        cd {{ .Environment.EXAMPLE_PATH }}
-        cross build --release --target {{ .Environment.TARGET }}
+        cd $EXAMPLE_PATH
+        cross build --release --target $TARGET
     - save_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
         paths:
