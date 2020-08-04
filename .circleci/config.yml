@@ -95,8 +95,6 @@ jobs:
       - TARGET: "thumbv7m-none-eabi"
     <<: *target_steps
 
-version: 2
-jobs:
   example-raspi:
     environment:
       - TARGET: "armv7-unknown-linux-gnueabihf"
