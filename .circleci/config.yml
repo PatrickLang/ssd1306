@@ -47,7 +47,7 @@ cross_steps: &cross_steps
         fi
     - run: |
         cd $EXAMPLE_PATH
-        cargo build --target $TARGET --release --all-features
+        cargo build --target $TARGET --release --verbose
     - save_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
         paths:
