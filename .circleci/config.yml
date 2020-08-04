@@ -45,6 +45,7 @@ cross_steps: &cross_steps
         else
           echo "Target $TARGET is already installed"
         fi
+    - run: |
         cd $EXAMPLE_PATH
         cargo build --target $TARGET --release --all-features
     - save_cache:
