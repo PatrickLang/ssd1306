@@ -25,6 +25,28 @@ target_steps: &target_steps
           - ./target
           - /usr/local/cargo/registry
 
+cross_steps: &cross_steps
+  docker:
+    - image: circleci/rust:1.41.0
+  steps:
+    - checkout
+    - restore_cache:
+        key: v2-ssd1306-raspi-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
+    - run: rustup self update
+    - run: sudo apt install -qq linkchecker
+    - run: rustup default ${RUST_VERSION:-stable}
+    - run: rustup component add rustfmt
+    - run: cargo update
+    - run: cargo install cross
+    - run: |
+        cd {{ .Environment.EXAMPLE_PATH }}
+        cross build --release --target {{ .Environment.CIRCLE_JOB }}
+    - save_cache:
+        key: v2-ssd1306-raspi-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
+        paths:
+          - ./target
+          - /usr/local/cargo/registry
+
 version: 2
 jobs:
   target-arm-unknown-linux-eabi:
@@ -73,6 +95,14 @@ jobs:
       - TARGET: "thumbv7m-none-eabi"
     <<: *target_steps
 
+version: 2
+jobs:
+  example-raspi:
+    environment:
+      - TARGET: "armv7-unknown-linux-gnueabihf"
+      - EXAMPLE_PATH: "examples/raspi"
+    <<: *cross_steps
+
 build_jobs: &build_jobs
   jobs:
     # Raspberry Pi 1
@@ -91,10 +121,15 @@ build_jobs: &build_jobs
     - target-thumbv7em-none-eabihf
     - target-thumbv7m-none-eabi
 
+build_example_jobs: &build_example_jobs
+  jobs:
+    - example-raspi
+
 workflows:
   version: 2
   build_all:
     <<: *build_jobs
+    <<: *build_example_jobs
 
   # Build every day
   nightly:
