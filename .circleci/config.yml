@@ -27,7 +27,7 @@ target_steps: &target_steps
 
 cross_steps: &cross_steps
   docker:
-    - image: circleci/rust:1.41.0
+    - image: cimg/rust:1.41.0
   steps:
     - checkout
     - restore_cache:
