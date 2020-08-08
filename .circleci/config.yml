@@ -32,7 +32,6 @@ cross_steps: &cross_steps
     - checkout
     - restore_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
-    - run: sudo apt install -qq gcc-arm-linux-gnueabihf
     - run: rustup self update
     - run: rustup default ${RUST_VERSION:-stable}
     - run: rustup component add rustfmt
@@ -48,7 +47,8 @@ cross_steps: &cross_steps
     - run: |
         set -x
         cd $EXAMPLE_PATH
-        cargo build --target $TARGET --release --verbose
+        cargo fmt --all -- --check
+        cargo build --target $TARGET --all-features --release
     - save_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
         paths:
