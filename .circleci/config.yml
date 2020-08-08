@@ -45,7 +45,7 @@ cross_steps: &cross_steps
           echo "Target $TARGET is already installed"
         fi
     - run: |
-        set -x
+        set -e -x
         cd $EXAMPLE_PATH
         cargo fmt --all -- --check
         cargo build --target $TARGET --all-features --release
