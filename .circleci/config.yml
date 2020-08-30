@@ -32,7 +32,8 @@ cross_steps: &cross_steps
     - checkout
     - restore_cache:
         key: v2-ssd1306-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cargo.toml" }}
-    - run: sudo apt install -qq gcc-arm-linux-gnueabihf
+    - run: sudo apt update
+    - run: sudo apt install -y gcc-arm-linux-gnueabihf
     - run: rustup self update
     - run: rustup default ${RUST_VERSION:-stable}
     - run: rustup component add rustfmt
